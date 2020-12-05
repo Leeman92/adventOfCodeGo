@@ -1,29 +1,19 @@
-package main
+package day2
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-func main() {
-	status := make(chan bool)
-	lines, err := readLines("input.txt")
-
-	if err != nil {
-		panic(err)
-	}
-
-	go partOne(status, lines)
-	<-status
-	go partTwo(status, lines)
-	<-status
+// Solve runs the solution for the code
+func Solve(lines []string) {
+	partOne(lines)
+	partTwo(lines)
 }
 
-func partOne(status chan bool, lines []string) {
+func partOne(lines []string) {
 	validCounter := 0
 	for _, line := range lines {
 		if !isValidOne(line) {
@@ -33,10 +23,9 @@ func partOne(status chan bool, lines []string) {
 	}
 
 	fmt.Printf("%d passwords for Part 1 were valid\n", validCounter)
-	status <- true
 }
 
-func partTwo(status chan bool, lines []string) {
+func partTwo(lines []string) {
 	validCounter := 0
 	for _, line := range lines {
 		if !isValidTwo(line) {
@@ -46,7 +35,6 @@ func partTwo(status chan bool, lines []string) {
 	}
 
 	fmt.Printf("%d passwords for Part 2 were valid\n", validCounter)
-	status <- true
 }
 
 func isValidOne(line string) bool {
@@ -84,23 +72,4 @@ func isValidTwo(line string) bool {
 	}
 
 	return false
-}
-
-// readLines reads a whole file into memory
-// and returns a slice of its lines.
-func readLines(path string) ([]string, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lineStr := scanner.Text()
-		lines = append(lines, lineStr)
-	}
-
-	return lines, scanner.Err()
 }

@@ -1,23 +1,10 @@
-package main
+package day4
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
-
-var requiredFields = []string{
-	"byr", // Birth Year
-	"iyr", // Issue Year
-	"eyr", // Expiration Year
-	"hgt", // Height
-	"hcl", // Hair Color
-	"ecl", // Eye Color
-	"pid", // Passport ID
-	"cid", // Country ID
-}
 
 type passport struct {
 	Byr string // Birth Year
@@ -30,72 +17,23 @@ type passport struct {
 	Cid string // Country ID
 }
 
-func main() {
-	status := make(chan bool)
-
-	//////////////
-	//  TESTING //
-	//////////////
-	testLines, testErr := readLines("input.test.txt")
-
-	if testErr != nil {
-		panic(testErr)
-	}
-
-	testPassports := parsePassports(testLines)
-	go partOne(status, testPassports)
-	<-status
-
-	testLines2Valid, testErr2Valid := readLines("input.test.2.valid.txt")
-
-	if testErr2Valid != nil {
-		panic(testErr2Valid)
-	}
-
-	testPassports = parsePassports(testLines2Valid)
-	go partTwo(status, testPassports)
-	<-status
-
-	testLines2Invalid, testErr2Invalid := readLines("input.test.2.invalid.txt")
-
-	if testErr2Invalid != nil {
-		panic(testErr2Invalid)
-	}
-
-	testPassports = parsePassports(testLines2Invalid)
-	go partTwo(status, testPassports)
-	<-status
-
-	fmt.Printf("\n/////////////////////\n// NO MORE TESTING //\n/////////////////////\n")
-
-	/////////////////////
-	// NO MORE TESTING //
-	/////////////////////
-
-	lines, err := readLines("input.txt")
-	if err != nil {
-		panic(err)
-	}
-
+// Solve runs the puzzle
+func Solve(lines []string) {
 	passports := parsePassports(lines)
-	go partOne(status, passports)
-	<-status
-	go partTwo(status, passports)
-	<-status
+	partOne(passports)
+	partTwo(passports)
 }
 
-func partOne(status chan bool, passports []passport) {
+func partOne(passports []passport) {
 	validCount := validatePassportsPartOne(passports)
 
-	fmt.Printf("\n====The answer for part 1====\n%d passports are valid out of %d\n=============================\n", validCount, len(passports))
-	status <- true
+	fmt.Printf("\n=======The answer for part 1=======\n%d passports are valid out of %d\n===================================\n", validCount, len(passports))
 }
 
-func partTwo(status chan bool, passports []passport) {
+func partTwo(passports []passport) {
 	validCount := validatePassportsPartTwo(passports)
 
-	fmt.Printf("\n====The answer for part 2====\n%d passports are valid out of %d\n=============================\n", validCount, len(passports))
-	status <- true
+	fmt.Printf("\n=======The answer for part 2=======\n%d passports are valid out of %d\n===================================\n", validCount, len(passports))
 }
 
 func validatePassportsPartOne(passports []passport) int {
@@ -265,23 +203,4 @@ func parsePassports(lines []string) []passport {
 	}
 
 	return passports
-}
-
-// readLines reads a whole file into memory
-// and returns a slice of its lines.
-func readLines(path string) ([]string, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lineStr := scanner.Text()
-		lines = append(lines, lineStr)
-	}
-
-	return lines, scanner.Err()
 }

@@ -1,27 +1,19 @@
-package main
+package day3
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strings"
 )
 
-func main() {
-	status := make(chan bool)
-	lines, err := readLines("input.txt")
+const tree = "#"
 
-	if err != nil {
-		panic(err)
-	}
-
-	go partOne(status, lines)
-	<-status
-	go partTwo(status, lines)
-	<-status
+// Solve runs the puzzle program
+func Solve(lines []string) {
+	partOne(lines)
+	partTwo(lines)
 }
 
-func partOne(status chan bool, lines []string) {
+func partOne(lines []string) {
 	treeCounter := 0
 	for lineNumber, line := range lines {
 		if !isTree(lineNumber, line, 3, 1) {
@@ -31,10 +23,9 @@ func partOne(status chan bool, lines []string) {
 	}
 
 	fmt.Printf("You hit %d trees in part 1\n", treeCounter)
-	status <- true
 }
 
-func partTwo(status chan bool, lines []string) {
+func partTwo(lines []string) {
 	treeCounter := 0
 	slopes := [5][2]int{
 		{1, 1},
@@ -60,7 +51,6 @@ func partTwo(status chan bool, lines []string) {
 	}
 
 	fmt.Printf("Answer for part 2 is: %d\n", treeCounter)
-	status <- true
 }
 
 func isTree(lineNumber int, line string, right int, skip int) bool {
@@ -75,24 +65,5 @@ func isTree(lineNumber int, line string, right int, skip int) bool {
 }
 
 func checkValue(value string) bool {
-	return value == "#"
-}
-
-// readLines reads a whole file into memory
-// and returns a slice of its lines.
-func readLines(path string) ([]string, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lineStr := scanner.Text()
-		lines = append(lines, lineStr)
-	}
-
-	return lines, scanner.Err()
+	return value == tree
 }
