@@ -1,8 +1,9 @@
 package day3
 
 import (
-	"fmt"
 	"strings"
+
+	"github.com/l33m4n123/adventOfCodeGo/2020/utils"
 )
 
 const tree = "#"
@@ -22,7 +23,7 @@ func partOne(lines []string) {
 		treeCounter++
 	}
 
-	fmt.Printf("You hit %d trees in part 1\n", treeCounter)
+	utils.PostSolution(3, 1, treeCounter)
 }
 
 func partTwo(lines []string) {
@@ -50,7 +51,7 @@ func partTwo(lines []string) {
 		}
 	}
 
-	fmt.Printf("Answer for part 2 is: %d\n", treeCounter)
+	utils.PostSolution(3, 2, treeCounter)
 }
 
 func isTree(lineNumber int, line string, right int, skip int) bool {

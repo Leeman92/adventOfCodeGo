@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/l33m4n123/adventOfCodeGo/2020/utils"
 )
 
 type passport struct {
@@ -27,13 +29,13 @@ func Solve(lines []string) {
 func partOne(passports []passport) {
 	validCount := validatePassportsPartOne(passports)
 
-	fmt.Printf("\n=======The answer for part 1=======\n%d passports are valid out of %d\n===================================\n", validCount, len(passports))
+	utils.PostSolution(4, 1, validCount)
 }
 
 func partTwo(passports []passport) {
 	validCount := validatePassportsPartTwo(passports)
 
-	fmt.Printf("\n=======The answer for part 2=======\n%d passports are valid out of %d\n===================================\n", validCount, len(passports))
+	utils.PostSolution(4, 2, validCount)
 }
 
 func validatePassportsPartOne(passports []passport) int {

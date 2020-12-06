@@ -5,6 +5,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/l33m4n123/adventOfCodeGo/2020/utils"
 )
 
 // Solve runs the solution for the code
@@ -22,7 +24,7 @@ func partOne(lines []string) {
 		validCounter++
 	}
 
-	fmt.Printf("%d passwords for Part 1 were valid\n", validCounter)
+	utils.PostSolution(2, 1, validCounter)
 }
 
 func partTwo(lines []string) {
@@ -34,7 +36,7 @@ func partTwo(lines []string) {
 		validCounter++
 	}
 
-	fmt.Printf("%d passwords for Part 2 were valid\n", validCounter)
+	utils.PostSolution(2, 2, validCounter)
 }
 
 func isValidOne(line string) bool {

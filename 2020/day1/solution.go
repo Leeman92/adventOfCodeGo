@@ -1,8 +1,6 @@
 package day1
 
 import (
-	"fmt"
-
 	"github.com/l33m4n123/adventOfCodeGo/2020/utils"
 )
 
@@ -22,8 +20,7 @@ func partOne(lines []int) {
 			}
 
 			if x+y == 2020 {
-				fmt.Printf("%d + %d = 2020\n", x, y)
-				fmt.Printf("Your answer for Part 1 is %d\n", x*y)
+				utils.PostSolution(1, 1, x*y)
 				return
 			}
 		}
@@ -43,8 +40,7 @@ func partTwo(lines []int) {
 				}
 
 				if x+y+z == 2020 {
-					fmt.Printf("%d + %d + %d = 2020\n", x, y, z)
-					fmt.Printf("Your answer for Part 2 is %d\n", x*y*z)
+					utils.PostSolution(1, 2, x*y*z)
 					return
 				}
 			}

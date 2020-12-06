@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+
+	"github.com/l33m4n123/adventOfCodeGo/2020/utils"
 )
 
 type seat struct {
@@ -28,14 +30,14 @@ func Solve(lines []string) {
 func partOne(seats []seat) {
 	highestSeatID := seats[len(seats)-1].ID
 
-	fmt.Printf("The answer for part 1 is: %d\n", highestSeatID)
+	utils.PostSolution(5, 1, highestSeatID)
 }
 
 func partTwo(seats []seat) {
 	expectedSeatID := seats[0].ID
 	for _, seat := range seats {
 		if seat.ID != expectedSeatID {
-			fmt.Printf("Your seat has the ID %d\n", expectedSeatID)
+			utils.PostSolution(5, 2, expectedSeatID)
 			return
 		}
 		expectedSeatID++
