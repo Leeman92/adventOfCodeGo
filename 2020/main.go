@@ -13,6 +13,7 @@ import (
 	"github.com/l33m4n123/adventOfCodeGo/2020/day5"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day6"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day7"
+	"github.com/l33m4n123/adventOfCodeGo/2020/day8"
 )
 
 const realInputFileName = "input.txt"
@@ -63,6 +64,9 @@ func runSolution(day int, lines []string, status chan bool) {
 		break
 	case 7:
 		day7.Solve(lines)
+		break
+	case 8:
+		day8.Solve(lines)
 		break
 	default:
 		panic(fmt.Sprintf("No solution for day %d implemented yet!\n", day))
