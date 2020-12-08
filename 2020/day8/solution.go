@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/l33m4n123/adventOfCodeGo/2020/utils"
 )
@@ -14,6 +15,7 @@ type Handheld struct {
 }
 
 func (h *Handheld) changeInputToBreakLoop(allInstructions []string) {
+	start := time.Now()
 	alreadyChanged := make(map[int]bool, len(allInstructions))
 	solved := false
 	counter := 0
@@ -71,6 +73,8 @@ func (h *Handheld) changeInputToBreakLoop(allInstructions []string) {
 	}
 
 	fmt.Printf("Took %v iterations\n", counter)
+	elapsed := time.Since(start)
+	fmt.Printf("changeInputToBreakLoop took %s\n", elapsed)
 }
 
 func (h *Handheld) lookForDuplicateInstrusctions(allInstructions []string) {
