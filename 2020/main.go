@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/l33m4n123/adventOfCodeGo/2020/day1"
+	"github.com/l33m4n123/adventOfCodeGo/2020/day10"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day2"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day3"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day4"
@@ -14,6 +15,7 @@ import (
 	"github.com/l33m4n123/adventOfCodeGo/2020/day6"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day7"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day8"
+	"github.com/l33m4n123/adventOfCodeGo/2020/day9"
 )
 
 const realInputFileName = "input.txt"
@@ -37,37 +39,33 @@ func main() {
 		panic(err)
 	}
 
-	go runSolution(*day, lines, status)
+	go runSolution(*day, lines, status, *test)
 	<-status
 }
 
-func runSolution(day int, lines []string, status chan bool) {
+func runSolution(day int, lines []string, status chan bool, test bool) {
 	fmt.Println("Running solution")
 	switch day {
 	case 1:
 		day1.Solve(lines)
-		break
 	case 2:
 		day2.Solve(lines)
-		break
 	case 3:
 		day3.Solve(lines)
-		break
 	case 4:
 		day4.Solve(lines)
-		break
 	case 5:
 		day5.Solve(lines)
-		break
 	case 6:
 		day6.Solve(lines)
-		break
 	case 7:
 		day7.Solve(lines)
-		break
 	case 8:
 		day8.Solve(lines)
-		break
+	case 9:
+		day9.Solve(lines, test)
+	case 10:
+		day10.Solve(lines)
 	default:
 		panic(fmt.Sprintf("No solution for day %d implemented yet!\n", day))
 	}
