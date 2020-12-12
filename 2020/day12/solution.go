@@ -64,8 +64,8 @@ func newBoat() Boat {
 	b.Location.X = 0
 	b.Location.Y = 0
 	b.Direction = EAST
-	b.Waypoint.horizontal = 10
-	b.Waypoint.vertical = -1
+	b.Waypoint.X = 10
+	b.Waypoint.Y = -1
 
 	return b
 }

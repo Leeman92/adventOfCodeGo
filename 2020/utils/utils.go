@@ -6,6 +6,10 @@ import (
 	"strconv"
 )
 
+type Coordinates struct {
+	X, Y int
+}
+
 // ConvertLinesToInt takes the line from the input and parses its values to integer.
 func ConvertLinesToInt(lines []string) []int {
 	result := []int{}

@@ -1,6 +1,9 @@
 package day12
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/l33m4n123/adventOfCodeGo/2020/utils"
+)
 
 const (
 	EAST = iota
@@ -10,9 +13,9 @@ const (
 )
 
 type Boat struct {
-	Location  Coordinates
+	Location  utils.Coordinates
 	Direction int
-	Waypoint  RelativeCoordinates
+	Waypoint  utils.Coordinates // These are always relative to the boat
 }
 
 func (b *Boat) turn(direction string, degrees int) {
@@ -64,8 +67,8 @@ func (b *Boat) move(direction string, amount int) {
 func (b *Boat) moveTowardsWaypoint(amount int) {
 	// relative to me. South right means he is +x +y away
 	// south east means +x -y and so on
-	travelDistanceVertical := b.Waypoint.vertical * amount
-	travelDistanceHorizontal := b.Waypoint.horizontal * amount
+	travelDistanceVertical := b.Waypoint.Y * amount
+	travelDistanceHorizontal := b.Waypoint.X * amount
 
 	if travelDistanceVertical < 0 {
 		b.move("N", travelDistanceVertical*-1)
@@ -91,44 +94,34 @@ func (b *Boat) rotateWaypoint(direction string, degrees int) {
 		amountOfTurns *= -1
 	}
 
-	horizontal := b.Waypoint.horizontal
-	vertical := b.Waypoint.vertical
 	switch amountOfTurns {
 	case -3:
 		fallthrough
 	case 1:
-		b.Waypoint.vertical, b.Waypoint.horizontal = horizontal, vertical*-1
+		b.Waypoint.Y, b.Waypoint.X = b.Waypoint.X, b.Waypoint.Y*-1
 	case -2:
 		fallthrough
 	case 2:
-		b.Waypoint.horizontal *= -1
-		b.Waypoint.vertical *= -1
+		b.Waypoint.X *= -1
+		b.Waypoint.Y *= -1
 	case -1:
 		fallthrough
 	case 3:
-		b.Waypoint.vertical, b.Waypoint.horizontal = horizontal*-1, vertical
+		b.Waypoint.Y, b.Waypoint.X = b.Waypoint.X*-1, b.Waypoint.Y
 	}
 }
 
 func (b *Boat) moveWaypoint(direction string, amount int) {
 	switch direction {
 	case "N":
-		b.Waypoint.vertical -= amount
+		b.Waypoint.Y -= amount
 	case "S":
-		b.Waypoint.vertical += amount
+		b.Waypoint.Y += amount
 	case "E":
-		b.Waypoint.horizontal += amount
+		b.Waypoint.X += amount
 	case "W":
-		b.Waypoint.horizontal -= amount
+		b.Waypoint.X -= amount
 	default:
 		panic(fmt.Sprintf("It wants us to move in an unknown direction %v\n", direction))
 	}
-}
-
-type Coordinates struct {
-	X, Y int
-}
-
-type RelativeCoordinates struct {
-	horizontal, vertical int
 }
