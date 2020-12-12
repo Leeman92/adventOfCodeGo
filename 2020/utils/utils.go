@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 )
 
@@ -48,4 +49,20 @@ func PostSolution(day int, part int, answer ...interface{}) {
 	fmt.Printf("========== DAY %d -- PART %d ==========\n", day, part)
 	fmt.Printf("          The answer is: %v\n", answer)
 	fmt.Printf("=====================================\n\n")
+}
+
+// FindStringSubmatchWithNamedMatches is a wrapper function to match a pattern in a string and return the named capture groups
+func FindStringSubmatchWithNamedMatches(pattern *regexp.Regexp, input string) map[string]string {
+	match := pattern.FindStringSubmatch(input)
+	if len(match) == 0 {
+		panic("No matches found!")
+	}
+	result := make(map[string]string)
+	for i, name := range pattern.SubexpNames() {
+		if i != 0 && name != "" {
+			result[name] = match[i]
+		}
+	}
+
+	return result
 }
