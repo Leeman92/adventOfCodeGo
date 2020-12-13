@@ -2,7 +2,6 @@ package day13
 
 import (
 	"fmt"
-	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -38,71 +37,30 @@ func partTwo() int64 {
 }
 
 func getSolutionPartTwo() int64 {
-	var t int64 = 0
+	var timeStamp int64 = 0
+	// the multiplikation for all possible car times.. so we can now that if bus 2 can drive and we keep that score bus 1 can still go aswell thanks to modulo
 	n1 := availableBusLinesPartTwo[0]
+
 	for i := range availableBusLinesPartTwo {
 		if i == 0 {
 			continue
 		}
+
 		var j int64
-		for {
+		canDepart := false
+		for !canDepart {
 			j++
-			jin := t + int64(j)*n1
-			test := (jin + int64(i)) % availableBusLinesPartTwo[i]
-			if test != 0 {
+			possibleTimeStamp := timeStamp + int64(j)*n1                              // now we need to make sure to put n1 into it to make sure we take a time the previous bus(ses) can still depart at aswell
+			canDepart = (possibleTimeStamp+int64(i))%availableBusLinesPartTwo[i] == 0 // if it is at 0 the bus can depart at the current timestamp
+			if !canDepart {
 				continue
 			}
-			t = jin
-			n1 = n1 * availableBusLinesPartTwo[i]
-			break
+			timeStamp = possibleTimeStamp     // All the bus we checked so far can depart at the given time
+			n1 *= availableBusLinesPartTwo[i] // As we now need to check when all the previous busses including this one can depart we increase the sum
 		}
 	}
 
-	return t
-}
-
-func getSolutionPartTwoDeprecated() int64 {
-
-	// Suppose bus B arrives at index I in the list
-	// B should depart at time T+I.
-	// T+I % B == 0
-	// that means
-	// T % B == -I
-	// because I want positive values
-	// T % B == (B -(I%B))%B
-
-	// For the chinese remainder theorem we need an N that is the product of the starting times. Because 0 < T < N according to the crt
-	product := int64(1)
-	remainders := map[int64]int64{}
-	for index, bus := range availableBusLinesPartTwo {
-		remainders[bus-(int64(index)%bus)%bus] = bus
-		product *= int64(bus)
-	}
-
-	answer := int64(0)
-	for I, B := range remainders {
-		newProductFloat := float64(product) / math.Max(float64(B), 1)
-		newProduct := int64(newProductFloat)
-		// newProduct is the product of all other bus starting times
-		// if we add a multiple of NI to T, it won't affect when the other busses arive modulo T,
-		// since newProduct is a multiple of each other busses
-
-		// We need to find a multiple of newProduct so that (x*newProduct)%B == I
-		// first find modInverse so that (modInverse*newProduct)%B == 1
-		// then (index * modInverse * newProduct)%B == 1
-
-		// First check if we only have primes
-		if utils.GetGCD(newProduct, B) != 1 {
-			panic("We have no primes. CRT only works with primes")
-		}
-		modInverse := utils.ModInverse(newProduct, B)
-		time := I * modInverse * newProduct
-		answer += time
-	}
-
-	answer %= product
-
-	return answer
+	return timeStamp
 }
 
 func getEarliestDepartureTimestamp() (int, int) {
