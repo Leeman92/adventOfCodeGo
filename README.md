@@ -1,6 +1,8 @@
 # adventOfCodeGo
 Advent of Code in Go
 
+I will have different branches to add features. Each branch will add one new feature that I first test in the develop branch.
+
 I want to get better at golang and I think advent of code gives me a nice plattform to improve on my abilities
 
 ## DEVELOP BRANCH
