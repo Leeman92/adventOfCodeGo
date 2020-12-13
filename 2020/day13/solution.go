@@ -38,30 +38,6 @@ func partTwo() int64 {
 }
 
 func getSolutionPartTwo() int64 {
-	var t int64 = 0
-	n1 := availableBusLinesPartTwo[0]
-	for i := range availableBusLinesPartTwo {
-		if i == 0 {
-			continue
-		}
-		var j int64
-		for {
-			j++
-			jin := t + int64(j)*n1
-			test := (jin + int64(i)) % availableBusLinesPartTwo[i]
-			if test != 0 {
-				continue
-			}
-			t = jin
-			n1 = n1 * availableBusLinesPartTwo[i]
-			break
-		}
-	}
-
-	return t
-}
-
-func getSolutionPartTwoDeprecated() int64 {
 
 	// Suppose bus B arrives at index I in the list
 	// B should depart at time T+I.
