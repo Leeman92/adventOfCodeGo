@@ -12,10 +12,9 @@ import (
 var earliestDeparture int
 var availableBusLines []int
 var availableBusLinesPartTwo map[int]int64
-var testRun bool
 
-func Solve(input []string, test bool) {
-	testRun = test
+// Solve runs the puzzle
+func Solve(input []string) {
 	parseInput(input)
 	solutionPartOne := partOne()
 	utils.PostSolution(13, 1, solutionPartOne)
@@ -57,6 +56,7 @@ func getSolutionPartTwo() int64 {
 			}
 			timeStamp = possibleTimeStamp     // All the bus we checked so far can depart at the given time
 			n1 *= availableBusLinesPartTwo[i] // As we now need to check when all the previous busses including this one can depart we increase the sum
+			utils.PrintDebug("Bus %v [%v] can take off at timestamp %v aswell as all the bus before that", i, availableBusLinesPartTwo[i], timeStamp)
 		}
 	}
 

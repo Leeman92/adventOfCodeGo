@@ -74,7 +74,7 @@ func runSolution(day int, lines []string, status chan bool, test bool) {
 	case 12:
 		day12.Solve(lines)
 	case 13:
-		day13.Solve(lines, test)
+		day13.Solve(lines)
 	}
 	status <- true
 }
