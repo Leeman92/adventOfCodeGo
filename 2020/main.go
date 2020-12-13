@@ -10,6 +10,7 @@ import (
 	"github.com/l33m4n123/adventOfCodeGo/2020/day10"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day11"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day12"
+	"github.com/l33m4n123/adventOfCodeGo/2020/day13"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day2"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day3"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day4"
@@ -72,8 +73,8 @@ func runSolution(day int, lines []string, status chan bool, test bool) {
 		day11.Solve(lines)
 	case 12:
 		day12.Solve(lines)
-	default:
-		panic(fmt.Sprintf("No solution for day %d implemented yet!\n", day))
+	case 13:
+		day13.Solve(lines, test)
 	}
 	status <- true
 }

@@ -2,9 +2,12 @@ package utils
 
 import (
 	"fmt"
+	"math/big"
 	"regexp"
 	"strconv"
 )
+
+var one = big.NewInt(1)
 
 type Coordinates struct {
 	X, Y int
@@ -69,4 +72,30 @@ func FindStringSubmatchWithNamedMatches(pattern *regexp.Regexp, input string) ma
 	}
 
 	return result
+}
+
+// GetGCD returns the greatest common divisor
+func GetGCD(a, b int64) int64 {
+	for b != 0 {
+		a, b = b, a%b
+	}
+	return a
+}
+
+// ModInverse returns the inverse of a modulo m
+func ModInverse(a, b int64) int64 {
+	// fact if b is prime. then a*a * (b-1) == 1 for any a
+	// => a*a*(b-2)*a == 1
+	// so a*a*(b-2) is a modular inverse of a!
+	return modPow(a, b-2, b)
+}
+
+func modPow(base, exponent, mod int64) int64 {
+	if exponent == 0 {
+		return 1
+	} else if exponent%2 == 0 {
+		return modPow((base*base)%mod, exponent/2, mod)
+	} else {
+		return (base * modPow(base, exponent-1, mod)) % mod
+	}
 }
