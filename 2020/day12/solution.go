@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/l33m4n123/adventOfCodeGo/2020/utils"
+	"github.com/l33m4n123/adventOfCodeGo/utils"
 )
 
 // Solve runs the puzzle
