@@ -11,6 +11,7 @@ import (
 	"github.com/l33m4n123/adventOfCodeGo/2020/day11"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day12"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day13"
+	"github.com/l33m4n123/adventOfCodeGo/2020/day14"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day2"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day3"
 	"github.com/l33m4n123/adventOfCodeGo/2020/day4"
@@ -75,6 +76,8 @@ func runSolution(day int, lines []string, status chan bool, test bool) {
 		day12.Solve(lines)
 	case 13:
 		day13.Solve(lines)
+	case 14:
+		day14.Solve(lines)
 	}
 	status <- true
 }

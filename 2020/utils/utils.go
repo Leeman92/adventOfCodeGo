@@ -69,10 +69,11 @@ func PrintDebug(message string, values ...interface{}) {
 // FindStringSubmatchWithNamedMatches is a wrapper function to match a pattern in a string and return the named capture groups
 func FindStringSubmatchWithNamedMatches(pattern *regexp.Regexp, input string) map[string]string {
 	match := pattern.FindStringSubmatch(input)
-	if len(match) == 0 {
-		panic("No matches found!")
-	}
 	result := make(map[string]string)
+	if len(match) == 0 {
+		return result
+	}
+
 	for i, name := range pattern.SubexpNames() {
 		if i != 0 && name != "" {
 			result[name] = match[i]
