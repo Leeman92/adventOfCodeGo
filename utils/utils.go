@@ -1,17 +1,12 @@
 package utils
 
 import (
-	"fmt"
 	"math/big"
 	"regexp"
 	"strconv"
 )
 
 var one = big.NewInt(1)
-
-type Coordinates struct {
-	X, Y int
-}
 
 // ConvertLinesToInt takes the line from the input and parses its values to integer.
 func ConvertLinesToInt(lines []string) []int {
@@ -49,21 +44,6 @@ func UniqueMultipleStringSlice(slice [][]string) [][]string {
 	}
 
 	return list
-}
-
-// PostSolution is a wrapper to post the result of the
-func PostSolution(day int, part int, answer ...interface{}) {
-	fmt.Printf("========== DAY %d -- PART %d ==========\n", day, part)
-	fmt.Printf("          The answer is: %v\n", answer)
-	fmt.Printf("=====================================\n\n")
-}
-
-// PrintDebug prints a debug message. Used alot for me during testing x)
-func PrintDebug(message string, values ...interface{}) {
-	fmt.Printf("========== DEBUG ==========\n")
-	fmt.Printf(message, values...)
-	fmt.Println("")
-	fmt.Printf("=====================================\n\n")
 }
 
 // FindStringSubmatchWithNamedMatches is a wrapper function to match a pattern in a string and return the named capture groups

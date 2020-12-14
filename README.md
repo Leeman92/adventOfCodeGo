@@ -4,6 +4,9 @@ Advent of Code in Go
 I will have different branches to add features. Each branch will add one new feature that I first test in the develop branch.
 
 ## Goals
+ - [x] select day on start of the program
+   - [x] possibility to select today via flag
+   - [x] possibility to select yesterday via flag
  - [ ] way to start the program to setup a new day
    - [ ] create skeleton go files
    - [ ] create empty input file
