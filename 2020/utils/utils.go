@@ -41,6 +41,19 @@ func UniqueStringSlice(stringSlice []string) []string {
 	return list
 }
 
+// UniqueIntSlice takes in a onedimensional slice and removes all duplicate entries
+func UniqueIntSlice(intSlice []int) []int {
+	keys := make(map[int]bool)
+	list := []int{}
+	for _, entry := range intSlice {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			list = append(list, entry)
+		}
+	}
+	return list
+}
+
 // UniqueMultipleStringSlice takes in a 2dimensional slice and makes sure each internal slice is unique. Not caring if a slice is same as another one
 func UniqueMultipleStringSlice(slice [][]string) [][]string {
 	list := make([][]string, len(slice))
@@ -81,4 +94,9 @@ func FindStringSubmatchWithNamedMatches(pattern *regexp.Regexp, input string) ma
 	}
 
 	return result
+}
+
+func Remove(slice []int, i int) []int {
+	copy(slice[i:], slice[i+1:])
+	return slice[:len(slice)-1]
 }
