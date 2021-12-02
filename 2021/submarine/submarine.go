@@ -7,10 +7,13 @@ import (
 )
 
 type Submarine struct {
-	SimplePosition  Coordinates
-	ComplexPosition Coordinates
-	Aim             int
-	InstructionSet  []Instruction
+	SimplePosition         Coordinates
+	ComplexPosition        Coordinates
+	SimplePositionHistory  []Coordinates
+	ComplexPositionHistory []Coordinates
+	Aim                    int
+	AimHistory             []int
+	InstructionSet         []Instruction
 }
 
 type Coordinates struct {
@@ -19,31 +22,33 @@ type Coordinates struct {
 }
 
 type Instruction struct {
-	Something func(int)
-	Parameter int
+	InstructionSet func(int)
+	Parameter      int
 }
 
-func (s *Submarine) PrepareNavigationComputer(lines []string) {
-	definedInstructions := map[string]func(int){
-		"forward": s.forward,
-		"up":      s.up,
-		"down":    s.down,
+func (s *Submarine) PrepareNavigationComputer(lines []string, day int) {
+	definedInstructions := map[int]map[string]func(int){
+		2: {
+			"forward": s.forward,
+			"up":      s.up,
+			"down":    s.down,
+		},
 	}
 
 	for _, val := range lines {
 		splitCommand := strings.Split(val, " ")
 		if len(splitCommand) != 2 {
-			panic(fmt.Sprintf("There was something off with your input. Given Input in question %s", val))
+			panic(fmt.Sprintf("There was something off with your input. Given Input in question \"%s\"", val))
 		}
 		parameter, err := strconv.Atoi(splitCommand[1])
 		if err != nil {
-			panic(fmt.Sprintf("%s could not be parsed to an integer", splitCommand[1]))
+			panic(fmt.Sprintf("\"%s\" could not be parsed to an integer\nFull Instruction was \"%s\"", splitCommand[1], val))
 		}
 
-		instructionLogic, ok := definedInstructions[splitCommand[0]]
+		instructionLogic, ok := definedInstructions[day][splitCommand[0]]
 		if !ok {
-			errorMessage := fmt.Sprintf("There was an instruction passed that has yet to be defined."+
-				"Passed Instruction %s is unkown", splitCommand[0])
+			errorMessage := fmt.Sprintf("There was an instruction passed that has yet to be defined.\n"+
+				"Passed Instruction \"%s\" is unknown for day \"%d\"", splitCommand[0], day)
 			panic(errorMessage)
 		}
 
@@ -53,7 +58,7 @@ func (s *Submarine) PrepareNavigationComputer(lines []string) {
 
 func (s *Submarine) Steer() {
 	for _, val := range s.InstructionSet {
-		val.Something(val.Parameter)
+		val.InstructionSet(val.Parameter)
 	}
 }
 
@@ -69,14 +74,23 @@ func (s *Submarine) forward(amount int) {
 	s.SimplePosition.X += amount
 	s.ComplexPosition.X += amount
 	s.ComplexPosition.Y += amount * s.Aim
+
+	s.SimplePositionHistory = append(s.SimplePositionHistory, s.SimplePosition)
+	s.ComplexPositionHistory = append(s.ComplexPositionHistory, s.ComplexPosition)
 }
 
 func (s *Submarine) up(amount int) {
 	s.SimplePosition.Y -= amount
 	s.Aim -= amount
+
+	s.SimplePositionHistory = append(s.SimplePositionHistory, s.SimplePosition)
+	s.AimHistory = append(s.AimHistory, s.Aim)
 }
 
 func (s *Submarine) down(amount int) {
 	s.SimplePosition.Y += amount
 	s.Aim += amount
+
+	s.SimplePositionHistory = append(s.SimplePositionHistory, s.SimplePosition)
+	s.AimHistory = append(s.AimHistory, s.Aim)
 }
