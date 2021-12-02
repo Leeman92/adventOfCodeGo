@@ -7,11 +7,10 @@ import (
 )
 
 type Submarine struct {
-	SimplePosition Coordinates
+	SimplePosition  Coordinates
 	ComplexPosition Coordinates
-	Aim      int
-	InstructionSet []Instruction
-
+	Aim             int
+	InstructionSet  []Instruction
 }
 
 type Coordinates struct {
@@ -25,10 +24,10 @@ type Instruction struct {
 }
 
 func (s *Submarine) PrepareNavigationComputer(lines []string) {
-	definedInstructions := map[string]func(int) {
+	definedInstructions := map[string]func(int){
 		"forward": s.forward,
-		"up": s.up,
-		"down": s.down,
+		"up":      s.up,
+		"down":    s.down,
 	}
 
 	for _, val := range lines {
@@ -43,7 +42,7 @@ func (s *Submarine) PrepareNavigationComputer(lines []string) {
 
 		instructionLogic, ok := definedInstructions[splitCommand[0]]
 		if !ok {
-			errorMessage := fmt.Sprintf("There was an instruction passed that has yet to be defined." +
+			errorMessage := fmt.Sprintf("There was an instruction passed that has yet to be defined."+
 				"Passed Instruction %s is unkown", splitCommand[0])
 			panic(errorMessage)
 		}
@@ -65,7 +64,6 @@ func (s *Submarine) GetPosition(complex bool) int {
 		return s.ComplexPosition.X * s.ComplexPosition.Y
 	}
 }
-
 
 func (s *Submarine) forward(amount int) {
 	s.SimplePosition.X += amount
