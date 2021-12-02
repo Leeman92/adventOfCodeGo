@@ -59,6 +59,8 @@ func (s *Submarine) PrepareNavigationComputer(lines []string, day int) {
 func (s *Submarine) Steer() {
 	for _, val := range s.InstructionSet {
 		val.InstructionSet(val.Parameter)
+
+		s.updateHistory()
 	}
 }
 
@@ -74,23 +76,20 @@ func (s *Submarine) forward(amount int) {
 	s.SimplePosition.X += amount
 	s.ComplexPosition.X += amount
 	s.ComplexPosition.Y += amount * s.Aim
-
-	s.SimplePositionHistory = append(s.SimplePositionHistory, s.SimplePosition)
-	s.ComplexPositionHistory = append(s.ComplexPositionHistory, s.ComplexPosition)
 }
 
 func (s *Submarine) up(amount int) {
 	s.SimplePosition.Y -= amount
 	s.Aim -= amount
-
-	s.SimplePositionHistory = append(s.SimplePositionHistory, s.SimplePosition)
-	s.AimHistory = append(s.AimHistory, s.Aim)
 }
 
 func (s *Submarine) down(amount int) {
 	s.SimplePosition.Y += amount
 	s.Aim += amount
+}
 
+func (s *Submarine) updateHistory() {
 	s.SimplePositionHistory = append(s.SimplePositionHistory, s.SimplePosition)
+	s.ComplexPositionHistory = append(s.ComplexPositionHistory, s.ComplexPosition)
 	s.AimHistory = append(s.AimHistory, s.Aim)
 }
