@@ -8,7 +8,7 @@ import (
 // Solve runs the puzzle
 func Solve(lines []string) {
 	sub := submarine.Submarine{}
-	sub.InstructionSet = lines
+	sub.PrepareNavigationComputer(lines)
 	sub.Steer()
 
 	utils.PostSolution(2, 1, sub.GetPosition(false))
