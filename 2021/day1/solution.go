@@ -2,7 +2,7 @@ package day1
 
 import (
 	"fmt"
-	"github.com/l33m4n123/adventOfCodeGo/2020/utils"
+	"github.com/l33m4n123/adventOfCodeGo/2021/utils"
 	"time"
 )
 

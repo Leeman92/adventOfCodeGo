@@ -4,10 +4,11 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"github.com/l33m4n123/adventOfCodeGo/2021/day2"
 	"os"
 
 	"github.com/l33m4n123/adventOfCodeGo/2021/day1"
+	"github.com/l33m4n123/adventOfCodeGo/2021/day2"
+	"github.com/l33m4n123/adventOfCodeGo/2021/day3"
 )
 
 const realInputFileName = "input.txt"
@@ -43,6 +44,8 @@ func runSolution(day int, lines []string, status chan bool, test bool) {
 		break
 	case 2:
 		day2.Solve(lines)
+	case 3:
+		day3.Solve(lines)
 		break
 	}
 

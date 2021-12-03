@@ -1,4 +1,4 @@
-package day2
+package day3
 
 import (
 	"github.com/l33m4n123/adventOfCodeGo/2021/submarine"
@@ -8,11 +8,8 @@ import (
 // Solve runs the puzzle
 func Solve(lines []string) {
 	sub := submarine.Submarine{}
-	sub.PrepareNavigationComputer(lines, 2)
-	sub.Steer()
+	sub.RunDiagnostic(lines)
 
-	utils.PostSolution(2, 1, sub.GetPosition(false))
-	utils.PostSolution(2, 2, sub.GetPosition(true))
-
-	sub.DrawDepth()
+	utils.PostSolution(3, 1, sub.PowerDraw)
+	utils.PostSolution(3, 2, sub.LifeSupportRating)
 }

@@ -2,6 +2,9 @@ package submarine
 
 import (
 	"fmt"
+	"github.com/l33m4n123/adventOfCodeGo/2021/utils"
+	"github.com/wcharczuk/go-chart"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -14,6 +17,14 @@ type Submarine struct {
 	Aim                    int
 	AimHistory             []int
 	InstructionSet         []Instruction
+	GammaRate              []string
+	EpsilonRate            []string
+	OxygenRatingBinary     []string
+	ScrubberRatingBinary   []string
+	OxygenRating           int
+	ScrubberRating         int
+	LifeSupportRating      int
+	PowerDraw              int
 }
 
 type Coordinates struct {
@@ -57,6 +68,8 @@ func (s *Submarine) PrepareNavigationComputer(lines []string, day int) {
 }
 
 func (s *Submarine) Steer() {
+	// To have the initial settings in the History with 0, 0
+	s.updateHistory()
 	for _, val := range s.InstructionSet {
 		val.InstructionSet(val.Parameter)
 
@@ -70,6 +83,69 @@ func (s *Submarine) GetPosition(complex bool) int {
 	} else {
 		return s.ComplexPosition.X * s.ComplexPosition.Y
 	}
+}
+
+func (s *Submarine) RunDiagnostic(lines []string) {
+	gammaRateSlice := s.calculateGammaRate(lines)
+	epsilonRateSlice := s.calculateEpsilonRate(lines)
+	oxygenRating, scrubberRating := s.calculateRatings(lines)
+
+	s.GammaRate = gammaRateSlice
+	s.EpsilonRate = epsilonRateSlice
+	s.OxygenRatingBinary = oxygenRating
+	s.OxygenRating = utils.BinarySliceToInt(oxygenRating)
+	s.ScrubberRatingBinary = scrubberRating
+	s.ScrubberRating = utils.BinarySliceToInt(scrubberRating)
+
+	s.PowerDraw = utils.BinarySliceToInt(gammaRateSlice) * utils.BinarySliceToInt(epsilonRateSlice)
+	s.LifeSupportRating = s.ScrubberRating * s.OxygenRating
+}
+
+func (s *Submarine) calculateGammaRate(lines []string) []string {
+	bitLength := len(lines[0])
+	var gammaRateSlice []string
+	for i := 0; i < bitLength; i++ {
+		gammaRateSlice = append(gammaRateSlice, utils.GetRelevantBit(lines, i, false))
+	}
+
+	return gammaRateSlice
+}
+
+func (s *Submarine) calculateEpsilonRate(lines []string) []string {
+	bitLength := len(lines[0])
+	var epsilonBinarySlice []string
+	for i := 0; i < bitLength; i++ {
+		epsilonBinarySlice = append(epsilonBinarySlice, utils.GetRelevantBit(lines, i, true))
+	}
+
+	return epsilonBinarySlice
+}
+
+func (s *Submarine) calculateRatings(lines []string) ([]string, []string) {
+	var oxygenRating []string
+	var scrubberRating []string
+
+	linesToCheck := lines
+	for i := 0; i < len(lines[0]); i++ {
+		mostCommonBit := utils.GetRelevantBit(linesToCheck, i, false)
+		linesToCheck = utils.FilterSlice(linesToCheck, mostCommonBit, i)
+		if len(linesToCheck) == 1 {
+			oxygenRating = linesToCheck
+			break
+		}
+	}
+
+	linesToCheck = lines
+	for i := 0; i < len(lines[0]); i++ {
+		leastCommonBit := utils.GetRelevantBit(linesToCheck, i, true)
+		linesToCheck = utils.FilterSlice(linesToCheck, leastCommonBit, i)
+		if len(linesToCheck) == 1 {
+			scrubberRating = linesToCheck
+			break
+		}
+	}
+
+	return oxygenRating, scrubberRating
 }
 
 func (s *Submarine) forward(amount int) {
@@ -92,4 +168,47 @@ func (s *Submarine) updateHistory() {
 	s.SimplePositionHistory = append(s.SimplePositionHistory, s.SimplePosition)
 	s.ComplexPositionHistory = append(s.ComplexPositionHistory, s.ComplexPosition)
 	s.AimHistory = append(s.AimHistory, s.Aim)
+}
+
+func (s *Submarine) DrawDepth() {
+	var simpleXValues []float64
+	var simpleYValues []float64
+	var complexXValues []float64
+	var complexYValues []float64
+	for i := 0; i < len(s.SimplePositionHistory); i++ {
+		simpleXValues = append(simpleXValues, float64(s.SimplePositionHistory[i].X))
+		simpleYValues = append(simpleYValues, float64(s.SimplePositionHistory[i].Y*-1))
+	}
+
+	for i := 0; i < len(s.ComplexPositionHistory); i++ {
+		complexXValues = append(complexXValues, float64(s.ComplexPositionHistory[i].X))
+		complexYValues = append(complexYValues, float64(s.ComplexPositionHistory[i].Y*-1/100))
+	}
+
+	graph := chart.Chart{
+		Series: []chart.Series{
+			chart.ContinuousSeries{
+				XValues: simpleXValues,
+				YValues: simpleYValues,
+			},
+			chart.ContinuousSeries{
+				XValues: complexXValues,
+				YValues: complexYValues,
+			},
+		},
+	}
+
+	pngFile, err := os.Create("output.png")
+	if err != nil {
+		panic(err)
+	}
+	err = graph.Render(chart.PNG, pngFile)
+
+	if err != nil {
+		panic(err)
+	}
+
+	if err = pngFile.Close(); err != nil {
+		panic(err)
+	}
 }
