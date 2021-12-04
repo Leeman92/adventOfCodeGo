@@ -5,6 +5,7 @@ import (
 	"math/big"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 var one = big.NewInt(1)
@@ -99,4 +100,13 @@ func FindStringSubmatchWithNamedMatches(pattern *regexp.Regexp, input string) ma
 func Remove(slice []int, i int) []int {
 	copy(slice[i:], slice[i+1:])
 	return slice[:len(slice)-1]
+}
+
+func BinarySliceToInt(binaryRepresantation []string) int {
+	i, err := strconv.ParseInt(strings.Join(binaryRepresantation, ""), 2, 64)
+	if err != nil {
+		panic(err)
+	}
+
+	return int(i)
 }
