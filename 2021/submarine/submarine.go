@@ -25,6 +25,7 @@ type Submarine struct {
 	ScrubberRating         int
 	LifeSupportRating      int
 	PowerDraw              int
+	BingoGame              BingoGame
 }
 
 type Coordinates struct {
@@ -35,6 +36,30 @@ type Coordinates struct {
 type Instruction struct {
 	InstructionSet func(int)
 	Parameter      int
+}
+
+type BingoGame struct {
+	NumbersDrawn       []int
+	BingoBoards        []BingoBoard
+	currentRound       int
+	Done               bool
+	FirstWinningBoard  BingoBoard
+	FirstWinningNumber int
+	LastWinningBoard   BingoBoard
+	LastWinningNumber  int
+	FirstWin           bool
+}
+
+type BingoBoard struct {
+	BingoNumbers map[int]map[int]BingoNumber
+	currentLine  int
+	Done         bool
+}
+
+type BingoNumber struct {
+	Position Coordinates
+	Value    int
+	Marked   bool
 }
 
 func (s *Submarine) PrepareNavigationComputer(lines []string, day int) {
@@ -63,7 +88,8 @@ func (s *Submarine) PrepareNavigationComputer(lines []string, day int) {
 			panic(errorMessage)
 		}
 
-		s.InstructionSet = append(s.InstructionSet, Instruction{instructionLogic, parameter})
+		instr := Instruction{instructionLogic, parameter}
+		s.InstructionSet = append(s.InstructionSet, instr)
 	}
 }
 
@@ -125,22 +151,27 @@ func (s *Submarine) calculateRatings(lines []string) ([]string, []string) {
 	var oxygenRating []string
 	var scrubberRating []string
 
-	linesToCheck := lines
+	oxygenReadout := lines
+	scrubberReadout := lines
 	for i := 0; i < len(lines[0]); i++ {
-		mostCommonBit := utils.GetRelevantBit(linesToCheck, i, false)
-		linesToCheck = utils.FilterSlice(linesToCheck, mostCommonBit, i)
-		if len(linesToCheck) == 1 {
-			oxygenRating = linesToCheck
-			break
+		if len(oxygenReadout) > 1 {
+			mostCommonBit := utils.GetRelevantBit(oxygenReadout, i, false)
+			oxygenReadout = utils.FilterSlice(oxygenReadout, mostCommonBit, i)
 		}
-	}
 
-	linesToCheck = lines
-	for i := 0; i < len(lines[0]); i++ {
-		leastCommonBit := utils.GetRelevantBit(linesToCheck, i, true)
-		linesToCheck = utils.FilterSlice(linesToCheck, leastCommonBit, i)
-		if len(linesToCheck) == 1 {
-			scrubberRating = linesToCheck
+		if len(scrubberReadout) > 1 {
+			leastCommonBit := utils.GetRelevantBit(scrubberReadout, i, true)
+			scrubberReadout = utils.FilterSlice(scrubberReadout, leastCommonBit, i)
+		}
+
+		if len(scrubberReadout) == 1 {
+			scrubberRating = scrubberReadout
+		}
+		if len(oxygenReadout) == 1 {
+			oxygenRating = oxygenReadout
+		}
+
+		if len(scrubberReadout) == 1 && len(oxygenReadout) == 1 {
 			break
 		}
 	}
@@ -210,5 +241,203 @@ func (s *Submarine) DrawDepth() {
 
 	if err = pngFile.Close(); err != nil {
 		panic(err)
+	}
+}
+
+func (s *Submarine) GenerateBingoGame(lines []string) {
+	bingoGame := BingoGame{}
+	var bingoBoard BingoBoard
+	for key, val := range lines {
+		if key == 0 {
+			generateDrawnNumbers(val, &bingoGame)
+			continue
+		}
+		if val == "" {
+			if key > 1 {
+				bingoGame.BingoBoards = append(bingoGame.BingoBoards, bingoBoard)
+			}
+			bingoBoard = BingoBoard{}
+			bingoBoard.BingoNumbers = make(map[int]map[int]BingoNumber)
+			continue
+		}
+		bingoBoard.addLine(val)
+	}
+
+	bingoGame.BingoBoards = append(bingoGame.BingoBoards, bingoBoard)
+
+	s.BingoGame = bingoGame
+
+}
+
+func (board *BingoBoard) addLine(line string) {
+	numberStringSlice := strings.Split(line, " ")
+	counter := 0
+	board.BingoNumbers[board.currentLine] = make(map[int]BingoNumber)
+	for _, val := range numberStringSlice {
+		if strings.Trim(val, " ") == "" {
+			continue
+		}
+
+		num, err := strconv.Atoi(strings.Trim(val, " "))
+		if err != nil {
+			panic(err)
+		}
+
+		coordinate := Coordinates{counter, board.currentLine}
+		bingoNumber := BingoNumber{coordinate, num, false}
+		board.BingoNumbers[board.currentLine][counter] = bingoNumber
+
+		counter++
+	}
+
+	board.currentLine += 1
+}
+
+func generateDrawnNumbers(val string, bingoGame *BingoGame) {
+	numbersDrawnStringSlice := strings.Split(val, ",")
+	for _, stringNumber := range numbersDrawnStringSlice {
+		num, err := strconv.Atoi(stringNumber)
+		if err != nil {
+			panic(err)
+		}
+		bingoGame.NumbersDrawn = append(bingoGame.NumbersDrawn, num)
+	}
+}
+
+func (game *BingoGame) Play() {
+	game.FirstWin = false
+	for !game.Done {
+		game.nextRound()
+	}
+}
+
+func (game *BingoGame) nextRound() {
+	currentRound := game.currentRound
+	if currentRound >= len(game.NumbersDrawn) {
+		fmt.Println("No more rounds to play...")
+		game.Done = true
+		return
+	}
+
+	currentNumber := game.NumbersDrawn[currentRound]
+	for key, board := range game.BingoBoards {
+		if board.Done {
+			continue
+		}
+		board.MarkNumber(currentNumber)
+		game.BingoBoards[key] = board
+		if !board.CheckCompleteness() {
+			continue
+		}
+		board.Done = true
+		game.BingoBoards[key] = board
+
+		if !game.FirstWin {
+			game.FirstWinningBoard = board
+			game.FirstWinningNumber = currentNumber
+			game.FirstWin = true
+		}
+		game.LastWinningBoard = board
+		game.LastWinningNumber = currentNumber
+	}
+
+	game.currentRound += 1
+}
+
+func (board *BingoBoard) MarkNumber(number int) {
+	for x := 0; x < 5; x++ {
+		for y := 0; y < 5; y++ {
+			bingoEntry := board.BingoNumbers[y][x]
+			if bingoEntry.Value != number {
+				continue
+			}
+			bingoEntry.Marked = true
+			board.BingoNumbers[y][x] = bingoEntry
+		}
+	}
+}
+
+func (board *BingoBoard) CheckCompleteness() bool {
+	rows := board.checkRows()
+	columns := board.checkColumns()
+	return rows || columns
+}
+
+func (board *BingoBoard) checkRows() (completed bool) {
+	completionCount := 0
+	for y := 0; y < 5; y++ {
+		if completed && completionCount == 5 {
+			return completed
+		}
+		completionCount = 0
+		completed = false
+		for x := 0; x < 5; x++ {
+			entry := board.BingoNumbers[y][x]
+			if !entry.Marked {
+				completed = false
+				break
+			}
+			completionCount += 1
+			completed = true
+		}
+	}
+	return completed
+}
+
+func (board *BingoBoard) checkColumns() (completed bool) {
+	completionCount := 0
+	for y := 0; y < 5; y++ {
+		if completed && completionCount == 5 {
+			return completed
+		}
+		completionCount = 0
+		completed = false
+		for x := 0; x < 5; x++ {
+			entry := board.BingoNumbers[x][y]
+			if !entry.Marked {
+				completed = false
+				break
+			}
+			completionCount += 1
+			completed = true
+		}
+	}
+	return completed
+}
+
+func (board *BingoBoard) CalculateMarkedSum() int {
+	return board.calculateSum(true)
+}
+
+func (board *BingoBoard) CalculateUnmarkedSum() int {
+	return board.calculateSum(false)
+}
+
+func (board *BingoBoard) calculateSum(marked bool) int {
+	sum := 0
+	for x := 0; x < 5; x++ {
+		for y := 0; y < 5; y++ {
+			entry := board.BingoNumbers[x][y]
+			if entry.Marked == marked {
+				sum += entry.Value
+			}
+		}
+	}
+
+	return sum
+}
+
+func (board *BingoBoard) PrintDebug() {
+	for y := 0; y < 5; y++ {
+		for x := 0; x < 5; x++ {
+			spacerLeft := "| "
+			spacerRight := " |"
+			if board.BingoNumbers[y][x].Marked {
+				spacerLeft = "|>"
+				spacerRight = "<|"
+			}
+			fmt.Printf("%s%02d%s", spacerLeft, board.BingoNumbers[y][x].Value, spacerRight)
+		}
+		fmt.Printf("\n")
 	}
 }
