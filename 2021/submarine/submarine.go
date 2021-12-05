@@ -10,10 +10,10 @@ import (
 )
 
 type Submarine struct {
-	SimplePosition         Coordinates
-	ComplexPosition        Coordinates
-	SimplePositionHistory  []Coordinates
-	ComplexPositionHistory []Coordinates
+	SimplePosition         utils.Coordinates
+	ComplexPosition        utils.Coordinates
+	SimplePositionHistory  []utils.Coordinates
+	ComplexPositionHistory []utils.Coordinates
 	Aim                    int
 	AimHistory             []int
 	InstructionSet         []Instruction
@@ -26,11 +26,6 @@ type Submarine struct {
 	LifeSupportRating      int
 	PowerDraw              int
 	BingoGame              BingoGame
-}
-
-type Coordinates struct {
-	X int
-	Y int
 }
 
 type Instruction struct {

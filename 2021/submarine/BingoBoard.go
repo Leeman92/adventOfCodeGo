@@ -2,6 +2,7 @@ package submarine
 
 import (
 	"fmt"
+	"github.com/l33m4n123/adventOfCodeGo/2021/utils"
 	"strconv"
 	"strings"
 )
@@ -26,7 +27,7 @@ func (board *BingoBoard) addLine(line string) {
 			panic(err)
 		}
 
-		coordinate := Coordinates{counter, board.currentLine}
+		coordinate := utils.Coordinates{X: counter, Y: board.currentLine}
 		bingoNumber := BingoNumber{coordinate, num, false}
 		board.BingoNumbers[board.currentLine][counter] = bingoNumber
 

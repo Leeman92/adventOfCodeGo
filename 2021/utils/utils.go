@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var one = big.NewInt(1)
@@ -69,6 +70,12 @@ func UniqueMultipleStringSlice(slice [][]string) [][]string {
 func PostSolution(day int, part int, answer ...interface{}) {
 	fmt.Printf("========== DAY %d -- PART %d ==========\n", day, part)
 	fmt.Printf("          The answer is: %v\n", answer)
+	fmt.Printf("=====================================\n\n")
+}
+func PostSolutionWithTime(day int, part int, duration time.Duration, answer ...interface{}) {
+	fmt.Printf("========== DAY %d -- PART %d ==========\n", day, part)
+	fmt.Printf("          The answer is: %v\n", answer)
+	fmt.Printf("          It took: %dns\n", duration)
 	fmt.Printf("=====================================\n\n")
 }
 
