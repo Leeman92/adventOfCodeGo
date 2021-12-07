@@ -12,6 +12,7 @@ import (
 	"github.com/l33m4n123/adventOfCodeGo/2021/day4"
 	"github.com/l33m4n123/adventOfCodeGo/2021/day5"
 	"github.com/l33m4n123/adventOfCodeGo/2021/day6"
+	"github.com/l33m4n123/adventOfCodeGo/2021/day7"
 )
 
 const realInputFileName = "input.txt"
@@ -59,6 +60,8 @@ func runSolution(day int, lines []string, status chan bool, test bool) {
 	case 6:
 		day6.Solve(lines)
 		break
+	case 7:
+		day7.Solve(lines)
 	}
 
 	status <- true

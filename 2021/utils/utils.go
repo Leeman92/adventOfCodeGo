@@ -171,3 +171,18 @@ func FilterSlice(haystack []string, needle string, position int) (cleanedHaystac
 
 	return cleanedHaystack
 }
+
+func ParseInputToIntSlice(input []string) (output []int) {
+	for _, val := range input {
+		valSlice := strings.Split(val, ",")
+		for _, str := range valSlice {
+			num, err := strconv.Atoi(str)
+			if err != nil {
+				panic(err)
+			}
+			output = append(output, num)
+		}
+	}
+
+	return output
+}
