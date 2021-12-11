@@ -30,6 +30,28 @@ func ConvertLinesToInt(lines []string) []int {
 	return result
 }
 
+// ConvertLinesToIntSlice takes the line from the input and parses its values to an integer slice.
+func ConvertLinesToIntSlice(lines []string) map[int]map[int]int {
+	result := make(map[int]map[int]int)
+
+	for outerKey, line := range lines {
+		splitLine := strings.Split(line, "")
+		for innerKey, val := range splitLine {
+			_, ok := result[outerKey]
+			if !ok {
+				result[outerKey] = make(map[int]int)
+			}
+			numb, err := strconv.Atoi(val)
+			if err != nil {
+				panic(err)
+			}
+			result[outerKey][innerKey] = numb
+		}
+	}
+
+	return result
+}
+
 // UniqueStringSlice takes in a onedimensional slice and removes all duplicate entries
 func UniqueStringSlice(stringSlice []string) []string {
 	keys := make(map[string]bool)
@@ -185,4 +207,12 @@ func ParseInputToIntSlice(input []string) (output []int) {
 	}
 
 	return output
+}
+
+func Reverse(s string) string {
+	runes := []rune(s)
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+		runes[i], runes[j] = runes[j], runes[i]
+	}
+	return string(runes)
 }

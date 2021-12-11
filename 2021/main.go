@@ -7,6 +7,8 @@ import (
 	"os"
 
 	"github.com/l33m4n123/adventOfCodeGo/2021/day1"
+	"github.com/l33m4n123/adventOfCodeGo/2021/day10"
+	"github.com/l33m4n123/adventOfCodeGo/2021/day11"
 	"github.com/l33m4n123/adventOfCodeGo/2021/day2"
 	"github.com/l33m4n123/adventOfCodeGo/2021/day3"
 	"github.com/l33m4n123/adventOfCodeGo/2021/day4"
@@ -14,6 +16,7 @@ import (
 	"github.com/l33m4n123/adventOfCodeGo/2021/day6"
 	"github.com/l33m4n123/adventOfCodeGo/2021/day7"
 	"github.com/l33m4n123/adventOfCodeGo/2021/day8"
+	"github.com/l33m4n123/adventOfCodeGo/2021/day9"
 )
 
 const realInputFileName = "input.txt"
@@ -65,6 +68,12 @@ func runSolution(day int, lines []string, status chan bool, test bool) {
 		day7.Solve(lines)
 	case 8:
 		day8.Solve(lines)
+	case 9:
+		day9.Solve(lines)
+	case 10:
+		day10.Solve(lines)
+	case 11:
+		day11.Solve(lines)
 	}
 
 	status <- true
